@@ -1,0 +1,119 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('ADMIN','pacientes')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{paciente.gestionTitulo}]]</h1>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h4 fw-bold mb-0">[[#{paciente.registrados}]]</h2>
+                    </div>
+                    <section class="card soft-card mb-4">
+                        <div class="card-body">
+                            <form class="row g-2" th:action="@{/admin/pacientes/listado}" method="get">
+                                <div class="col-md-10">
+                                    <label class="form-label">[[#{paciente.buscarLabel}]]</label>
+                                    <input class="form-control" name="busqueda" th:value="${busqueda}"/>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button class="btn btn-primary w-100" type="submit">[[#{accion.buscar}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="card soft-card mb-4">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 mb-0" th:if="${paciente.idPaciente == null}">[[#{paciente.registrarTitulo}]]</h2>
+                            <h2 class="h5 mb-0" th:if="${paciente.idPaciente != null}">[[#{paciente.editarTitulo}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3 was-validated" th:action="@{/admin/pacientes/guardar}"
+                                  th:object="${paciente}" method="post">
+                                <input type="hidden" th:field="*{idPaciente}"/>
+                                <input type="hidden" th:field="*{usuario.idUsuario}"/>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.nombreCompleto}]]</label>
+                                    <input class="form-control" th:field="*{usuario.nombre}" required="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.correo}]]</label>
+                                    <input type="email" class="form-control" th:field="*{usuario.correo}" required="true"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.cedula}]]</label>
+                                    <input class="form-control" th:field="*{cedula}" required="true"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.telefono}]]</label>
+                                    <input class="form-control" th:field="*{telefono}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.fechaNacimiento}]]</label>
+                                    <input type="date" class="form-control" th:field="*{fechaNacimiento}"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label">[[#{campo.direccion}]]</label>
+                                    <input class="form-control" th:field="*{direccion}"/>
+                                </div>
+                                <div class="col-md-4" th:if="${paciente.idPaciente == null}">
+                                    <label class="form-label">[[#{paciente.contrasenaInicial}]]</label>
+                                    <input type="password" class="form-control" th:field="*{usuario.contrasena}" required="true"/>
+                                </div>
+                                <div class="col-12 d-flex gap-2">
+                                    <button class="btn btn-primary" type="submit">[[#{accion.guardar}]]</button>
+                                    <a class="btn btn-secondary" th:if="${paciente.idPaciente != null}"
+                                       th:href="@{/admin/pacientes/listado}">[[#{accion.cancelarEdicion}]]</a>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="card soft-card">
+                        <div class="card-body">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>[[#{campo.nombre}]]</th>
+                                        <th>[[#{campo.correo}]]</th>
+                                        <th>[[#{campo.cedula}]]</th>
+                                        <th>[[#{campo.telefono}]]</th>
+                                        <th>[[#{campo.fechaNacimiento}]]</th>
+                                        <th>[[#{campo.estado}]]</th>
+                                        <th>[[#{campo.acciones}]]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="p : ${pacientes}">
+                                        <td>[[${p.usuario.nombre}]]</td>
+                                        <td>[[${p.usuario.correo}]]</td>
+                                        <td>[[${p.cedula}]]</td>
+                                        <td>[[${p.telefono}]]</td>
+                                        <td>[[${p.fechaNacimiento}]]</td>
+                                        <td>
+                                            <span th:if="${p.usuario.activo}" class="badge text-bg-success">[[#{estado.activo}]]</span>
+                                            <span th:unless="${p.usuario.activo}" class="badge text-bg-danger">[[#{estado.inactivo}]]</span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a class="btn btn-sm btn-outline-secondary"
+                                                   th:href="@{/admin/pacientes/listado(editar=${p.idPaciente})}">[[#{accion.editar}]]</a>
+                                                <form th:action="@{/admin/pacientes/estado}" method="post">
+                                                    <input type="hidden" name="idPaciente" th:value="${p.idPaciente}"/>
+                                                    <button th:if="${p.usuario.activo}" class="btn btn-sm btn-outline-primary" type="submit">[[#{accion.desactivar}]]</button>
+                                                    <button th:unless="${p.usuario.activo}" class="btn btn-sm btn-outline-primary" type="submit">[[#{accion.activar}]]</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p th:if="${pacientes == null or pacientes.empty}" class="text-center text-secondary">[[#{lista.vacia}]]</p>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

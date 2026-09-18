@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('ADMIN','notificaciones')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{notificacion.titulo}]]</h1>
+                    <p class="text-secondary">[[#{notificacion.descripcion}]]</p>
+                    <section class="card soft-card">
+                        <div class="card-body">
+                            <table class="table table-hover align-middle">
+                                <thead><tr><th>[[#{notificacion.fechaEnvio}]]</th><th>[[#{notificacion.tipo}]]</th><th>[[#{notificacion.destinatario}]]</th><th>[[#{notificacion.cita}]]</th><th>[[#{notificacion.resultado}]]</th></tr></thead>
+                                <tbody>
+                                    <tr th:each="n : ${notificaciones}">
+                                        <td>[[${n.fechaEnvio}]]</td>
+                                        <td th:text="#{__${'tipoNotificacion.' + n.tipo}__}">Tipo</td>
+                                        <td>[[${n.destinatario}]]</td>
+                                        <td th:if="${n.cita != null}">[[${n.cita.fecha}]] [[${n.cita.hora}]]</td>
+                                        <td th:if="${n.cita == null}">-</td>
+                                        <td>
+                                            <span th:if="${n.exito}" class="badge text-bg-success">[[#{notificacion.enviado}]]</span>
+                                            <span th:unless="${n.exito}" class="badge text-bg-danger">[[#{notificacion.noEnviado}]]</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p th:if="${notificaciones == null or notificaciones.empty}" class="text-center text-secondary">[[#{lista.vacia}]]</p>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>

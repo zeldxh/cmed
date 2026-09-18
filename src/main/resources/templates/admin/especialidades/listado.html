@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('ADMIN','especialidades')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{especialidad.gestionTitulo}]]</h1>
+                    <section class="card soft-card mb-4">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0" th:text="${especialidad.idEspecialidad == null} ? #{especialidad.nuevaTitulo} : #{especialidad.editarTitulo}">Nueva especialidad médica</h2>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-2" th:action="@{/admin/especialidades/guardar}" method="post" th:object="${especialidad}">
+                                <input type="hidden" th:field="*{idEspecialidad}"/>
+                                <div class="col-md-4">
+                                    <input class="form-control" th:field="*{nombre}" th:placeholder="#{especialidad.nombrePlaceholder}" required="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" th:field="*{descripcion}" th:placeholder="#{especialidad.descripcionPlaceholder}"/>
+                                </div>
+                                <div class="col-md-2 d-grid">
+                                    <button class="btn btn-primary" type="submit">[[#{accion.guardar}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="card soft-card">
+                        <div class="card-body">
+                            <table class="table table-hover align-middle">
+                                <thead><tr><th>[[#{campo.especialidad}]]</th><th>[[#{campo.descripcion}]]</th><th>[[#{campo.estado}]]</th><th>[[#{campo.acciones}]]</th></tr></thead>
+                                <tbody>
+                                    <tr th:each="e : ${especialidades}">
+                                        <td>[[${e.nombre}]]</td>
+                                        <td>[[${e.descripcion}]]</td>
+                                        <td>
+                                            <span th:if="${e.activo}" class="badge text-bg-success">[[#{estado.activo}]]</span>
+                                            <span th:unless="${e.activo}" class="badge text-bg-danger">[[#{estado.inactivo}]]</span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a class="btn btn-sm btn-outline-primary"
+                                                   th:href="@{/admin/especialidades/listado(editar=${e.idEspecialidad})}">[[#{accion.editar}]]</a>
+                                                <form th:action="@{/admin/especialidades/eliminar}" method="post"
+                                                      th:attr="onsubmit=|return confirm('${#strings.escapeJavaScript(#messages.msg('especialidad.eliminarConfirmar'))}');|">
+                                                    <input type="hidden" name="idEspecialidad" th:value="${e.idEspecialidad}"/>
+                                                    <button class="btn btn-sm btn-outline-danger" type="submit">[[#{accion.eliminar}]]</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

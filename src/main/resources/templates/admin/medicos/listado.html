@@ -1,0 +1,125 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('ADMIN','medicos')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h1 class="h3">[[#{medico.gestionTitulo}]]</h1>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#medicoModal">
+                            <i class="fa-solid fa-plus"></i> [[#{accion.nuevoMedico}]]
+                        </button>
+                    </div>
+                    <section class="card soft-card mb-4">
+                        <div class="card-body">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr><th>[[#{campo.nombre}]]</th><th>[[#{campo.especialidad}]]</th><th>[[#{campo.horario}]]</th><th>[[#{campo.colegiado}]]</th><th>[[#{campo.correo}]]</th><th>[[#{campo.estado}]]</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="d : ${doctores}">
+                                        <td>[[${d.usuario.nombre}]]</td>
+                                        <td>[[${d.especialidad.nombre}]]</td>
+                                        <td>
+                                            <span th:each="h : ${d.horarios}" class="d-block small">
+                                                <span th:text="#{__${'dia.' + h.diaSemana}__}">Día</span> [[${h.horaInicio}]] - [[${h.horaFin}]]
+                                            </span>
+                                        </td>
+                                        <td>[[${d.numeroColegiado}]]</td>
+                                        <td>[[${d.usuario.correo}]]</td>
+                                        <td>
+                                            <span th:if="${d.activo}" class="badge text-bg-success">[[#{estado.activo}]]</span>
+                                            <span th:unless="${d.activo}" class="badge text-bg-danger">[[#{estado.inactivo}]]</span>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/admin/medicos/estado}" method="post">
+                                                <input type="hidden" name="idDoctor" th:value="${d.idDoctor}"/>
+                                                <button class="btn btn-sm btn-outline-secondary" type="submit">[[#{accion.cambiarEstado}]]</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section class="card soft-card">
+                        <div class="card-header"><h2 class="h5 mb-0">[[#{accion.nuevaEspecialidad}]]</h2></div>
+                        <div class="card-body">
+                            <form class="row g-2" th:action="@{/admin/especialidades/guardar}" method="post">
+                                <div class="col-md-4"><input class="form-control" name="nombre" th:placeholder="#{campo.nombre}" required="true"/></div>
+                                <div class="col-md-6"><input class="form-control" name="descripcion" th:placeholder="#{especialidad.descripcionPlaceholder}"/></div>
+                                <div class="col-md-2 d-grid"><button class="btn btn-outline-primary" type="submit">[[#{accion.guardar}]]</button></div>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <div class="modal fade" id="medicoModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form th:action="@{/admin/medicos/guardar}" th:object="${doctor}" method="post" class="was-validated">
+                        <div class="modal-header bg-primary text-white">
+                            <h2 class="modal-title h5">[[#{medico.nuevoTitulo}]]</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.nombreCompleto}]]</label>
+                                    <input class="form-control" th:field="*{usuario.nombre}" required="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.correo}]]</label>
+                                    <input type="email" class="form-control" th:field="*{usuario.correo}" required="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{medico.contrasenaInicial}]]</label>
+                                    <input type="password" class="form-control" th:field="*{usuario.contrasena}" required="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.colegiado}]]</label>
+                                    <input class="form-control" th:field="*{numeroColegiado}" required="true"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label">[[#{campo.especialidad}]]</label>
+                                    <select class="form-select" th:field="*{especialidad.idEspecialidad}" required="true">
+                                        <option th:each="e : ${especialidades}" th:value="${e.idEspecialidad}" th:text="${e.nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" th:field="*{activo}"/>
+                                        <label class="form-check-label">[[#{estado.activo}]]</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{medico.diaDisponible}]]</label>
+                                    <select class="form-select" name="diaSemana" required="true">
+                                        <option th:each="dia : ${diasSemana}" th:value="${dia}" th:text="#{__${'dia.' + dia}__}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{medico.horaInicio}]]</label>
+                                    <input type="time" class="form-control" name="horaInicio" required="true"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{medico.horaFin}]]</label>
+                                    <input type="time" class="form-control" name="horaFin" required="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">[[#{accion.cerrar}]]</button>
+                            <button type="submit" class="btn btn-primary">[[#{accion.guardar}]]</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

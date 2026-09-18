@@ -1,0 +1,89 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('ADMIN','citas')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{cita.gestionTitulo}]]</h1>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h4 fw-bold mb-0">[[#{cita.todasTitulo}]]</h2>
+                    </div>
+                    <section class="card soft-card mb-4">
+                        <div class="card-body">
+                            <form class="row g-3 align-items-end" th:action="@{/admin/citas/listado}" method="get">
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.medico}]]</label>
+                                    <select class="form-select" name="idDoctor">
+                                        <option value="">[[#{filtro.todos}]]</option>
+                                        <option th:each="d : ${doctores}" th:value="${d.idDoctor}"
+                                                th:text="${d.usuario.nombre}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">[[#{campo.fecha}]]</label>
+                                    <input type="date" class="form-control" name="fecha" th:value="${fecha}"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">[[#{campo.estado}]]</label>
+                                    <select class="form-select" name="estado">
+                                        <option value="">[[#{filtro.todos}]]</option>
+                                        <option th:each="e : ${estados}" th:value="${e}" th:text="#{__${'estado.' + e}__}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary w-100" type="submit">[[#{accion.filtrar}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="card soft-card">
+                        <div class="card-body">
+                            <table class="table table-hover align-middle">
+                                <thead><tr><th>[[#{campo.paciente}]]</th><th>[[#{campo.medico}]]</th><th>[[#{campo.fecha}]]</th><th>[[#{campo.hora}]]</th><th>[[#{campo.motivo}]]</th><th>[[#{campo.estado}]]</th><th>[[#{campo.acciones}]]</th></tr></thead>
+                                <tbody>
+                                    <tr th:each="c : ${citas}">
+                                        <td>[[${c.paciente.usuario.nombre}]]</td>
+                                        <td>[[${c.doctor.usuario.nombre}]]</td>
+                                        <td>[[${c.fecha}]]</td>
+                                        <td>[[${c.hora}]]</td>
+                                        <td>[[${c.motivo}]]</td>
+                                        <td><span class="badge text-bg-warning" th:text="#{__${'estado.' + c.estado}__}">Estado</span></td>
+                                        <td>
+                                            <div class="d-flex flex-wrap gap-2" th:if="${c.estado.name() == 'PENDIENTE'}">
+                                                <form th:action="@{/admin/citas/confirmar}" method="post">
+                                                    <input type="hidden" name="idCita" th:value="${c.idCita}"/>
+                                                    <button class="btn btn-sm btn-success" type="submit">[[#{accion.confirmar}]]</button>
+                                                </form>
+                                                <form class="d-flex gap-2" th:action="@{/admin/citas/rechazar}" method="post">
+                                                    <input type="hidden" name="idCita" th:value="${c.idCita}"/>
+                                                    <input class="form-control form-control-sm" name="motivo"
+                                                           th:placeholder="#{campo.motivo}" required="true"/>
+                                                    <button class="btn btn-sm btn-danger" type="submit">[[#{accion.rechazar}]]</button>
+                                                </form>
+                                            </div>
+                                            <form class="d-flex flex-wrap gap-2 mt-2" th:action="@{/admin/citas/reprogramar}" method="post"
+                                                  th:if="${c.estado.name() == 'PENDIENTE' or c.estado.name() == 'CONFIRMADA'}">
+                                                <input type="hidden" name="idCita" th:value="${c.idCita}"/>
+                                                <select class="form-select form-select-sm" name="idDoctor" style="max-width: 10rem;" required="true">
+                                                    <option th:each="d : ${doctores}" th:value="${d.idDoctor}"
+                                                            th:selected="${d.idDoctor == c.doctor.idDoctor}"
+                                                            th:text="${d.usuario.nombre}"></option>
+                                                </select>
+                                                <input type="date" class="form-control form-control-sm" name="fecha" th:value="${c.fecha}" required="true"/>
+                                                <input type="time" class="form-control form-control-sm" name="hora" th:value="${c.hora}" required="true"/>
+                                                <button class="btn btn-sm btn-outline-primary" type="submit">[[#{accion.reprogramar}]]</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

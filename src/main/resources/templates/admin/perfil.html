@@ -1,0 +1,56 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('ADMIN','perfil')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{perfil.titulo}]]</h1>
+                    <section class="card soft-card">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{perfil.infoAdmin}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.nombre}]]</label>
+                                    <input class="form-control" th:value="${nombreUsuario}" readonly="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.rol}]]</label>
+                                    <input class="form-control" th:value="${rol}" readonly="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="card soft-card mt-4">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{perfil.cambiarContrasena}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3 was-validated" th:action="@{/admin/perfil/contrasena}" method="post">
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.contrasenaActual}]]</label>
+                                    <input class="form-control" type="password" name="actual" required="true"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.contrasenaNueva}]]</label>
+                                    <input class="form-control" type="password" name="nueva" required="true"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.contrasenaConfirmar}]]</label>
+                                    <input class="form-control" type="password" name="confirmar" required="true"/>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="submit">[[#{perfil.actualizarContrasena}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>
