@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('DOCTOR','pacientes')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{plantilla.pacientes}]]</h1>
+                    <section class="card soft-card mb-4">
+                        <div class="card-body">
+                            <form class="row g-2 mb-3" th:action="@{/doctor/pacientes}" method="get">
+                                <div class="col-md-6">
+                                    <input class="form-control" name="busqueda" th:value="${busqueda}"
+                                           th:placeholder="#{paciente.buscarLabel}"/>
+                                </div>
+                                <div class="col-md-2 d-grid">
+                                    <button class="btn btn-primary" type="submit">[[#{accion.buscar}]]</button>
+                                </div>
+                            </form>
+                            <table class="table table-hover align-middle">
+                                <thead><tr><th>[[#{campo.paciente}]]</th><th>[[#{campo.correo}]]</th><th>[[#{campo.telefono}]]</th><th>[[#{campo.fechaNacimiento}]]</th><th>[[#{plantilla.citas}]]</th></tr></thead>
+                                <tbody>
+                                    <tr th:each="p : ${pacientes}">
+                                        <td>[[${p.usuario.nombre}]]</td>
+                                        <td>[[${p.usuario.correo}]]</td>
+                                        <td>[[${p.telefono}]]</td>
+                                        <td>[[${p.fechaNacimiento}]]</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-primary"
+                                               th:href="@{/doctor/pacientes(idPaciente=${p.idPaciente})}">[[#{accion.verCitas}]]</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section class="card soft-card" th:if="${pacienteActual != null}">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 mb-0">[[#{paciente.historialDe}]] [[${pacienteActual.usuario.nombre}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover align-middle">
+                                <thead><tr><th>[[#{campo.fecha}]]</th><th>[[#{campo.hora}]]</th><th>[[#{campo.motivo}]]</th><th>[[#{campo.estado}]]</th><th>[[#{campo.notas}]]</th></tr></thead>
+                                <tbody>
+                                    <tr th:each="c : ${citas}">
+                                        <td>[[${c.fecha}]]</td>
+                                        <td>[[${c.hora}]]</td>
+                                        <td>[[${c.motivo}]]</td>
+                                        <td><span class="badge text-bg-secondary" th:text="#{__${'estado.' + c.estado}__}">Estado</span></td>
+                                        <td>[[${c.notas}]]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p th:if="${citas == null or citas.empty}" class="text-center text-secondary">[[#{lista.vacia}]]</p>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('DOCTOR','bloquear')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{bloqueo.titulo}]]</h1>
+                    <section class="card soft-card">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{bloqueo.registrar}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3 was-validated" th:action="@{/doctor/bloquear/guardar}" method="post">
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{bloqueo.doctor}]]</label>
+                                    <input class="form-control" th:value="${doctorActual.usuario.nombre}" readonly="true"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">[[#{bloqueo.fechaInicio}]]</label>
+                                    <input class="form-control" name="fechaInicio" type="datetime-local" required="true"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">[[#{bloqueo.fechaFin}]]</label>
+                                    <input class="form-control" name="fechaFin" type="datetime-local" required="true"/>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">[[#{campo.motivo}]]</label>
+                                    <input class="form-control" name="motivo" th:placeholder="#{bloqueo.motivoPlaceholder}" required="true"/>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="submit">[[#{accion.guardarBloqueo}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="card soft-card mt-4">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{bloqueo.listadoTitulo}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover align-middle">
+                                <thead><tr><th>[[#{bloqueo.fechaInicio}]]</th><th>[[#{bloqueo.fechaFin}]]</th><th>[[#{campo.motivo}]]</th></tr></thead>
+                                <tbody>
+                                    <tr th:each="b : ${bloqueos}">
+                                        <td>[[${b.fechaInicio}]]</td>
+                                        <td>[[${b.fechaFin}]]</td>
+                                        <td>[[${b.motivo}]]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p th:if="${bloqueos == null or bloqueos.empty}" class="text-center text-secondary">[[#{lista.vacia}]]</p>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('DOCTOR','agenda')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h1 class="h3">[[#{agenda.titulo}]]</h1>
+                            <p class="text-secondary mb-0">[[#{agenda.fechaInicial}]]: [[${fecha}]]</p>
+                        </div>
+                        <span class="badge text-bg-primary" th:if="${doctorActual != null}">
+                            [[${doctorActual.usuario.nombre}]]
+                        </span>
+                    </div>
+                    <section class="card soft-card mb-4">
+                        <div class="card-body">
+                            <form class="row g-3 align-items-end" th:action="@{/doctor/agenda}" method="get">
+                                <div class="col-md-5">
+                                    <label class="form-label">[[#{campo.fecha}]]</label>
+                                    <input type="date" class="form-control" name="fecha" th:value="${fecha}"/>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">[[#{agenda.vista}]]</label>
+                                    <select class="form-select" name="vista">
+                                        <option value="dia">[[#{agenda.diaria}]]</option>
+                                        <option value="semana">[[#{agenda.semanal}]]</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary w-100" type="submit">[[#{accion.consultar}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="card soft-card">
+                        <div class="card-body">
+                            <div th:if="${citas != null and !citas.empty}" class="list-group">
+                                <div class="list-group-item" th:each="c : ${citas}">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2">
+                                            <strong>[[${c.fecha}]]</strong>
+                                            <div>[[${c.hora}]]</div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div>[[${c.paciente.usuario.nombre}]]</div>
+                                            <small class="text-secondary">[[${c.motivo}]]</small>
+                                        </div>
+                                        <div class="col-md-2"><span class="badge text-bg-info" th:text="#{__${'estado.' + c.estado}__}">Estado</span></div>
+                                        <div class="col-md-4">
+                                            <form class="d-flex gap-2" th:if="${c.estado.name() != 'COMPLETADA' and c.estado.name() != 'CANCELADA'}"
+                                                  th:action="@{/doctor/citas/completar}" method="post">
+                                                <input type="hidden" name="idCita" th:value="${c.idCita}"/>
+                                                <input class="form-control form-control-sm" name="notas" th:placeholder="#{misCitas.nota}"/>
+                                                <button class="btn btn-sm btn-success" type="submit">[[#{accion.completar}]]</button>
+                                            </form>
+                                            <span th:if="${c.notas != null}" class="small text-secondary">[[${c.notas}]]</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p th:if="${citas == null or citas.empty}" class="text-center text-secondary">[[#{lista.vacia}]]</p>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>
