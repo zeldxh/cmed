@@ -1,0 +1,56 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <section class="container-fluid p-0">
+            <div class="row min-vh-100">
+                <div class="col-md-5 brand-panel auth-side d-flex flex-column">
+                    <div class="fw-bold fs-4 mb-auto">CitaMed</div>
+                    <div>
+                        <h1>[[#{login.eslogan}]]</h1>
+                        <p class="fs-6 mt-3 mb-4 opacity-75">[[#{login.eslogan.detalle}]]</p>
+                        <div class="d-flex flex-column align-items-start gap-2">
+                            <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">✓ [[#{login.beneficio.roles}]]</span>
+                            <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">✓ [[#{login.beneficio.agenda}]]</span>
+                            <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">✓ [[#{login.beneficio.historial}]]</span>
+                        </div>
+                    </div>
+                    <div class="mt-auto"></div>
+                </div>
+                <div class="col-md-7 d-flex align-items-center justify-content-center p-4">
+                    <div class="auth-shell w-100">
+                        <div class="d-flex justify-content-end gap-2 small mb-2">
+                            <a th:href="@{/login(lang=es)}">ES</a>
+                            <span>|</span>
+                            <a th:href="@{/login(lang=en)}">EN</a>
+                        </div>
+                        <h2 class="fw-bold mb-1">[[#{login.titulo}]]</h2>
+                        <p class="text-secondary mb-4">[[#{login.subtitulo}]]</p>
+                        <div class="alert alert-danger" th:if="${param.error}" th:text="#{login.error}"></div>
+                        <div class="alert alert-success" th:if="${param.salida}" th:text="#{login.salida}"></div>
+                        <form class="was-validated" th:action="@{/login}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">[[#{campo.correo}]]</label>
+                                <input type="email" name="correo" class="form-control auth-form-control" placeholder="usuario@citamed.cr" required="true"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">[[#{campo.contrasena}]]</label>
+                                <input type="password" name="contrasena" class="form-control auth-form-control" placeholder="••••••••" required="true"/>
+                            </div>
+                            <div class="d-grid">
+                                <button class="btn btn-primary py-2 fw-semibold" type="submit">[[#{accion.ingresar}]]</button>
+                            </div>
+                        </form>
+                        <div class="d-flex align-items-center gap-3 my-5">
+                            <hr class="flex-grow-1"/>
+                            <span class="text-secondary small">[[#{login.o}]]</span>
+                            <hr class="flex-grow-1"/>
+                        </div>
+                        <p class="text-center text-secondary mb-3">[[#{login.esNuevo}]] <a class="fw-semibold text-decoration-none" th:href="@{/registro}">[[#{accion.crearCuenta}]]</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

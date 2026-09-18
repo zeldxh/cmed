@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <section class="container-fluid p-0">
+            <div class="row min-vh-100">
+                <div class="col-lg-4 brand-panel auth-side d-flex flex-column">
+                    <div class="fw-bold fs-4 mb-auto">CitaMed</div>
+                    <div>
+                        <h1>[[#{registro.subtitulo}]]</h1>
+                        <p class="mt-3 opacity-75">[[#{registro.intro}]]</p>
+                        <div class="mt-4 d-grid gap-3">
+                            <div><span class="badge rounded-circle bg-white bg-opacity-25 me-3 p-2">1</span> [[#{registro.paso1}]]</div>
+                            <div><span class="badge rounded-circle bg-white bg-opacity-25 me-3 p-2">2</span> [[#{registro.paso2}]]</div>
+                            <div><span class="badge rounded-circle bg-white bg-opacity-25 me-3 p-2">3</span> [[#{registro.paso3}]]</div>
+                        </div>
+                    </div>
+                    <div class="mt-auto"></div>
+                </div>
+                <div class="col-lg-8 p-5 d-flex align-items-center">
+                    <form class="was-validated" th:action="@{/registro/guardar}" th:object="${paciente}" method="post">
+                        <h2 class="h4 fw-bold mb-2">[[#{registro.infoPersonal}]]</h2>
+                        <p class="text-secondary">[[#{registro.completeCampos}]]</p>
+                        <hr class="my-4"/>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">[[#{campo.nombre}]]</label>
+                                <input class="form-control auth-form-control" th:field="*{usuario.nombre}" placeholder="Nombre(s)" required="true"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">[[#{campo.correo}]]</label>
+                                <input type="email" class="form-control auth-form-control" th:field="*{usuario.correo}" placeholder="paciente@citamed.cr" required="true"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">[[#{campo.fechaNacimiento}]]</label>
+                                <input type="date" class="form-control auth-form-control" th:field="*{fechaNacimiento}"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">[[#{campo.cedula}]]</label>
+                                <input class="form-control auth-form-control" th:field="*{cedula}"
+                                       placeholder="0-0000-0000" required="true"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">[[#{campo.telefono}]]</label>
+                                <input class="form-control auth-form-control" th:field="*{telefono}" placeholder="8888-8888"/>
+                            </div>
+                        </div>
+                        <hr class="my-4"/>
+                        <h2 class="h5 fw-bold">[[#{registro.accesoSistema}]]</h2>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">[[#{campo.contrasena}]]</label>
+                                <input type="password" class="form-control auth-form-control" th:field="*{usuario.contrasena}" placeholder="••••••••" required="true"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">[[#{campo.contrasenaConfirmar}]]</label>
+                                <input type="password" class="form-control auth-form-control"
+                                       name="confirmar" placeholder="••••••••" required="true"/>
+                            </div>
+                        </div>
+                        <div class="mt-4 d-grid">
+                            <button class="btn btn-primary py-2 fw-semibold" type="submit">
+                                [[#{accion.crearCuenta}]]
+                            </button>
+                        </div>
+                        <p class="text-center text-secondary mt-3">[[#{registro.yaTiene}]] <a class="fw-semibold text-decoration-none" th:href="@{/login}">[[#{accion.iniciarSesion}]]</a></p>
+                    </form>
+                    <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
