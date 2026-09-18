@@ -1,0 +1,77 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('PACIENTE','perfil')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{perfil.titulo}]]</h1>
+                    <section class="card soft-card">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{perfil.infoPersonal}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <form th:if="${paciente != null}" class="row g-3 was-validated"
+                                  th:action="@{/paciente/perfil/datos}" method="post">
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.nombreCompleto}]]</label>
+                                    <input class="form-control" name="nombre" th:value="${paciente.usuario.nombre}" required="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.correo}]]</label>
+                                    <input class="form-control" type="email" name="correo" th:value="${paciente.usuario.correo}" required="true"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.telefono}]]</label>
+                                    <input class="form-control" name="telefono" th:value="${paciente.telefono}"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{campo.fechaNacimiento}]]</label>
+                                    <input class="form-control" th:value="${paciente.fechaNacimiento}" readonly="true"/>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">[[#{campo.direccion}]]</label>
+                                    <input class="form-control" name="direccion" th:value="${paciente.direccion}"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">[[#{perfil.contrasenaSoloCorreo}]]</label>
+                                    <input class="form-control" type="password" name="confirmarContrasena"/>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="submit">[[#{perfil.guardarDatos}]]</button>
+                                </div>
+                            </form>
+                            <p th:if="${paciente == null}" class="text-secondary mb-0">[[#{perfil.sinInformacion}]]</p>
+                        </div>
+                    </section>
+                    <section class="card soft-card mt-4">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{perfil.cambiarContrasena}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3 was-validated" th:action="@{/paciente/perfil/contrasena}" method="post">
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.contrasenaActual}]]</label>
+                                    <input class="form-control" type="password" name="actual" required="true"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.contrasenaNueva}]]</label>
+                                    <input class="form-control" type="password" name="nueva" required="true"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{campo.contrasenaConfirmar}]]</label>
+                                    <input class="form-control" type="password" name="confirmar" required="true"/>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="submit">[[#{perfil.actualizarContrasena}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

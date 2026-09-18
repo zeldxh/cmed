@@ -1,0 +1,67 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('PACIENTE','inicio')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h5 fw-bold mb-5">[[#{dashboard.bienvenido}]], [[${nombrePaciente}]]</h1>
+                    <section class="figma-banner p-4 mb-4">
+                        <h2 class="h4 fw-bold">[[#{dashboard.buenosDias}]], [[${nombrePaciente}]]!</h2>
+                        <p class="mb-0 opacity-75">[[#{dashboard.subtituloPaciente}]]</p>
+                    </section>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card soft-card h-100">
+                                <div class="card-body">
+                                    <div class="mini-line bg-primary mb-3"></div>
+                                    <h2 class="h5 fw-bold">[[#{plantilla.reservar}]]</h2>
+                                    <p>[[#{dashboard.reservarDetalle}]]</p>
+                                    <a class="btn btn-primary" th:href="@{/paciente/citas/reservar}">[[#{accion.ir}]] →</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card soft-card h-100">
+                                <div class="card-body">
+                                    <div class="mini-line bg-success mb-3"></div>
+                                    <h2 class="h5 fw-bold">[[#{plantilla.misCitas}]]</h2>
+                                    <p>[[#{dashboard.misCitasDetalle}]]</p>
+                                    <a class="btn btn-success" th:href="@{/paciente/citas/listado}">[[#{accion.ir}]] →</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card soft-card h-100">
+                                <div class="card-body">
+                                    <div class="mini-line bg-secondary mb-3"></div>
+                                    <h2 class="h5 fw-bold">[[#{plantilla.perfil}]]</h2>
+                                    <p>[[#{dashboard.perfilDetalle}]]</p>
+                                    <a class="btn btn-secondary" th:href="@{/paciente/perfil}">[[#{accion.ir}]] →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <section class="card soft-card mt-4">
+                        <div class="card-body">
+                            <h2 class="h5 fw-bold mb-3">[[#{dashboard.proximaCita}]]</h2>
+                            <hr/>
+                            <div th:if="${proximaCita != null}" class="alert alert-primary d-flex justify-content-between align-items-center mb-0">
+                                <div>
+                                    <strong>[[${proximaCita.doctor.usuario.nombre}]] — [[${proximaCita.doctor.especialidad.nombre}]]</strong>
+                                    <div>[[${proximaCita.fecha}]] · [[${proximaCita.hora}]]</div>
+                                </div>
+                                <form th:action="@{/paciente/citas/cancelar}" method="post">
+                                    <input type="hidden" name="idCita" th:value="${proximaCita.idCita}"/>
+                                    <button class="btn btn-sm btn-danger" type="submit">[[#{accion.cancelar}]]</button>
+                                </form>
+                            </div>
+                            <p th:if="${proximaCita == null}" class="text-secondary mb-0">[[#{dashboard.sinCitas}]]</p>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>

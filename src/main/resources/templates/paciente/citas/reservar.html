@@ -1,0 +1,174 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('PACIENTE','reservar')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1 class="h3">[[#{reservar.titulo}]]</h1>
+                        <a class="btn btn-secondary" th:href="@{/paciente}">[[#{accion.regresar}]]</a>
+                    </div>
+                    <div class="card soft-card mb-4">
+                        <div class="card-body py-2">
+                            <div class="wizard-bar">
+                                <div class="wizard-step active" th:if="${idEspecialidad == null}">
+                                    <span class="wizard-number">1</span>
+                                    <span>[[#{reservar.pasoEspecialidad}]]</span>
+                                </div>
+                                <div class="wizard-step done" th:if="${idEspecialidad != null}">
+                                    <span class="wizard-number">1</span>
+                                    <span>[[#{reservar.pasoEspecialidad}]]</span>
+                                </div>
+                                <span class="wizard-line"></span>
+                                <div class="wizard-step" th:if="${idEspecialidad == null}">
+                                    <span class="wizard-number">2</span>
+                                    <span>[[#{reservar.pasoMedicoHorario}]]</span>
+                                </div>
+                                <div class="wizard-step active" th:if="${idEspecialidad != null and horaSeleccionada == null}">
+                                    <span class="wizard-number">2</span>
+                                    <span>[[#{reservar.pasoMedicoHorario}]]</span>
+                                </div>
+                                <div class="wizard-step done" th:if="${horaSeleccionada != null}">
+                                    <span class="wizard-number">2</span>
+                                    <span>[[#{reservar.pasoMedicoHorario}]]</span>
+                                </div>
+                                <span class="wizard-line"></span>
+                                <div class="wizard-step" th:if="${horaSeleccionada == null}">
+                                    <span class="wizard-number">3</span>
+                                    <span>[[#{reservar.pasoConfirmacion}]]</span>
+                                </div>
+                                <div class="wizard-step active" th:if="${horaSeleccionada != null}">
+                                    <span class="wizard-number">3</span>
+                                    <span>[[#{reservar.pasoConfirmacion}]]</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <section th:if="${idEspecialidad == null}">
+                    <h2 class="h5 fw-bold mb-3">[[#{reservar.seleccioneEspecialidad}]]</h2>
+                    <div class="row row-cols-1 row-cols-md-3 g-3">
+                        <div class="col" th:each="e : ${especialidades}">
+                            <div class="card soft-card specialty-card h-100">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="mini-line bg-primary mb-3"></div>
+                                    <h3 class="h5">[[${e.nombre}]]</h3>
+                                    <p class="text-secondary flex-grow-1">[[${e.descripcion}]]</p>
+                                    <a class="btn btn-outline-primary" th:href="@{/paciente/citas/reservar(idEspecialidad=${e.idEspecialidad})}">
+                                        [[#{accion.seleccionar}]]
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </section>
+                    <section class="card soft-card" th:if="${idEspecialidad != null and horaSeleccionada == null}">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{reservar.seleccioneMedicoHorario}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <form class="was-validated mb-4" th:action="@{/paciente/citas/reservar}" method="get">
+                                <input type="hidden" name="idEspecialidad" th:value="${idEspecialidad}"/>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">[[#{campo.medico}]]</label>
+                                        <select class="form-select" name="idDoctor" required="true">
+                                            <option value="">[[#{reservar.seleccioneMedico}]]</option>
+                                            <option th:each="d : ${doctores}" th:value="${d.idDoctor}"
+                                                    th:selected="${idDoctor != null and idDoctor == d.idDoctor}"
+                                                    th:text="${d.usuario.nombre + ' - ' + d.especialidad.nombre}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">[[#{campo.fecha}]]</label>
+                                        <input type="date" class="form-control" name="fecha"
+                                               th:min="${fechaMinima}" th:value="${fechaSeleccionada}" required="true"/>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a class="btn btn-secondary" th:href="@{/paciente/citas/reservar}">[[#{accion.regresar}]]</a>
+                                    <button class="btn btn-primary" type="submit">[[#{accion.consultarHorarios}]]</button>
+                                </div>
+                            </form>
+                            <p th:if="${doctores == null or doctores.empty}" class="text-secondary mb-0">[[#{reservar.sinMedicos}]]</p>
+                            <form class="row g-3 was-validated" th:if="${idDoctor != null and fechaSeleccionada != null}"
+                                  th:action="@{/paciente/citas/reservar}" method="get">
+                                <input type="hidden" name="idEspecialidad" th:value="${idEspecialidad}"/>
+                                <input type="hidden" name="idDoctor" th:value="${idDoctor}"/>
+                                <input type="hidden" name="fecha" th:value="${fechaSeleccionada}"/>
+                                <div class="col-md-4">
+                                    <label class="form-label">[[#{reservar.horarioDisponible}]]</label>
+                                    <select class="form-select" name="hora" required="true">
+                                        <option value="">[[#{reservar.seleccioneHora}]]</option>
+                                        <option th:each="h : ${horasDisponibles}" th:value="${h}" th:text="${h}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label">[[#{campo.motivo}]]</label>
+                                    <input class="form-control" name="motivo" th:placeholder="#{reservar.motivoPlaceholder}" required="true"/>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button class="btn btn-primary" type="submit">[[#{accion.continuar}]]</button>
+                                </div>
+                            </form>
+                            <p th:if="${idDoctor != null and fechaSeleccionada != null and horasDisponibles.empty}"
+                               class="alert alert-warning mb-0">[[#{reservar.sinHorarios}]]</p>
+                        </div>
+                    </section>
+                    <section class="card soft-card" th:if="${horaSeleccionada != null}">
+                        <div class="card-header bg-white">
+                            <h2 class="h5 fw-bold mb-0">[[#{reservar.confirmarDatos}]]</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 h-100">
+                                        <small class="text-secondary">[[#{campo.paciente}]]</small>
+                                        <div class="fw-bold">[[${pacienteActual.usuario.nombre}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 h-100">
+                                        <small class="text-secondary">[[#{campo.medico}]]</small>
+                                        <div class="fw-bold">[[${doctorSeleccionado.usuario.nombre}]]</div>
+                                        <div class="text-secondary">[[${doctorSeleccionado.especialidad.nombre}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3 h-100">
+                                        <small class="text-secondary">[[#{campo.fecha}]]</small>
+                                        <div class="fw-bold">[[${fechaSeleccionada}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3 h-100">
+                                        <small class="text-secondary">[[#{campo.hora}]]</small>
+                                        <div class="fw-bold">[[${horaSeleccionada}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3 h-100">
+                                        <small class="text-secondary">[[#{campo.motivo}]]</small>
+                                        <div class="fw-bold">[[${motivoSeleccionado}]]</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form th:action="@{/paciente/citas/guardar}" th:object="${cita}" method="post">
+                                <input type="hidden" name="doctor.idDoctor" th:value="${idDoctor}"/>
+                                <input type="hidden" name="fecha" th:value="${fechaSeleccionada}"/>
+                                <input type="hidden" name="hora" th:value="${horaSeleccionada}"/>
+                                <input type="hidden" name="motivo" th:value="${motivoSeleccionado}"/>
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-secondary" th:href="@{/paciente/citas/reservar(idEspecialidad=${idEspecialidad})}">[[#{accion.regresar}]]</a>
+                                    <button class="btn btn-primary" type="submit">[[#{accion.confirmarCita}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>

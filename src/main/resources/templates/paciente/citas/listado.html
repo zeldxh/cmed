@@ -1,0 +1,75 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <aside th:replace="~{general/fragmentos :: sidebar('PACIENTE','citas')}"></aside>
+                <main class="flex-grow-1 content-area">
+                    <h1 class="h3 mb-3">[[#{plantilla.misCitas}]]</h1>
+                    <ul class="nav nav-tabs mb-3" id="tabsCitas" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-proximas" data-bs-toggle="tab"
+                                    data-bs-target="#panel-proximas" type="button" role="tab">[[#{misCitas.proximas}]]</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-historial" data-bs-toggle="tab"
+                                    data-bs-target="#panel-historial" type="button" role="tab">[[#{misCitas.historial}]]</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="panel-proximas" role="tabpanel">
+                            <div class="card soft-card">
+                                <div class="card-body">
+                                    <div th:if="${citasProximas != null and !citasProximas.empty}" class="list-group">
+                                        <div class="list-group-item" th:each="c : ${citasProximas}">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <h2 class="h6 mb-1">[[${c.doctor.usuario.nombre}]] - [[${c.doctor.especialidad.nombre}]]</h2>
+                                                    <p class="mb-1">[[${c.fecha}]] [[#{conector.aLasHoras}]] [[${c.hora}]]</p>
+                                                    <p class="mb-0 text-secondary">[[${c.motivo}]]</p>
+                                                </div>
+                                                <div class="text-end">
+                                                    <span class="badge status-badge text-bg-warning" th:text="#{__${'estado.' + c.estado}__}">Estado</span>
+                                                    <form class="mt-2" th:if="${c.cancelable}"
+                                                          th:action="@{/paciente/citas/cancelar}" method="post">
+                                                        <input type="hidden" name="idCita" th:value="${c.idCita}"/>
+                                                        <button class="btn btn-sm btn-outline-danger" type="submit">[[#{accion.cancelar}]]</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p th:if="${citasProximas == null or citasProximas.empty}" class="text-center text-secondary">[[#{lista.vacia}]]</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="panel-historial" role="tabpanel">
+                            <div class="card soft-card">
+                                <div class="card-body">
+                                    <div th:if="${citasHistorial != null and !citasHistorial.empty}" class="list-group">
+                                        <div class="list-group-item" th:each="c : ${citasHistorial}">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <h2 class="h6 mb-1">[[${c.doctor.usuario.nombre}]] - [[${c.doctor.especialidad.nombre}]]</h2>
+                                                    <p class="mb-1">[[${c.fecha}]] [[#{conector.aLasHoras}]] [[${c.hora}]]</p>
+                                                    <p class="mb-0 text-secondary">[[${c.motivo}]]</p>
+                                                    <p class="mb-0" th:if="${c.notas != null}">[[#{misCitas.nota}]]: [[${c.notas}]]</p>
+                                                </div>
+                                                <div class="text-end">
+                                                    <span th:text="#{__${'estado.' + c.estado}__}" th:class="${c.estado.name() == 'CANCELADA'} ? 'badge status-badge text-bg-danger' : (${c.estado.name() == 'COMPLETADA'} ? 'badge status-badge text-bg-success' : 'badge status-badge text-bg-warning')">Estado</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p th:if="${citasHistorial == null or citasHistorial.empty}" class="text-center text-secondary">[[#{lista.vacia}]]</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+    </body>
+</html>
