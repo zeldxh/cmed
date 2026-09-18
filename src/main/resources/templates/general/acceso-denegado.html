@@ -1,0 +1,11 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body class="app-body">
+        <div class="container py-5 text-center">
+            <h1 class="h3 fw-bold mb-3">[[#{accesoDenegado.titulo}]]</h1>
+            <p class="text-secondary mb-4">[[#{accesoDenegado.mensaje}]]</p>
+            <a class="btn btn-primary" th:href="@{/}">[[#{accion.volverInicio}]]</a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:fragment="head">
+        <title>CitaMed</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+        <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    </head>
+
+    <aside th:fragment="sidebar(rol, activo)" class="sidebar p-0">
+        <a th:href="@{/}" class="navbar-brand d-block fs-5 fw-bold px-3 py-4">
+            CitaMed
+        </a>
+        <nav class="nav nav-pills flex-column" sec:authorize="hasRole('ADMIN')">
+            <a class="nav-link" th:href="@{/admin/dashboard}">
+                <span class="me-2">•</span> [[#{plantilla.dashboard}]]
+            </a>
+            <a class="nav-link" th:href="@{/admin/citas/listado}">
+                <span class="me-2">•</span> [[#{plantilla.citas}]]
+            </a>
+            <a class="nav-link" th:href="@{/admin/medicos/listado}">
+                <span class="me-2">•</span> [[#{plantilla.medicos}]]
+            </a>
+            <a class="nav-link" th:href="@{/admin/pacientes/listado}">
+                <span class="me-2">•</span> [[#{plantilla.pacientes}]]
+            </a>
+            <a class="nav-link" th:href="@{/admin/especialidades/listado}">
+                <span class="me-2">•</span> [[#{plantilla.especialidades}]]
+            </a>
+            <a class="nav-link" th:href="@{/admin/reportes}">
+                <span class="me-2">•</span> [[#{plantilla.reportes}]]
+            </a>
+            <a class="nav-link" th:href="@{/admin/notificaciones}">
+                <span class="me-2">•</span> [[#{plantilla.notificaciones}]]
+            </a>
+            <a class="nav-link" th:href="@{/admin/perfil}">
+                <span class="me-2">•</span> [[#{plantilla.perfil}]]
+            </a>
+        </nav>
+        <nav class="nav nav-pills flex-column" sec:authorize="hasRole('PACIENTE')">
+            <a class="nav-link" th:href="@{/paciente}">
+                <span class="me-2">•</span> [[#{plantilla.inicio}]]
+            </a>
+            <a class="nav-link" th:href="@{/paciente/citas/reservar}">
+                <span class="me-2">•</span> [[#{plantilla.reservar}]]
+            </a>
+            <a class="nav-link" th:href="@{/paciente/citas/listado}">
+                <span class="me-2">•</span> [[#{plantilla.misCitas}]]
+            </a>
+            <a class="nav-link" th:href="@{/paciente/perfil}">
+                <span class="me-2">•</span> [[#{plantilla.perfil}]]
+            </a>
+        </nav>
+        <nav class="nav nav-pills flex-column" sec:authorize="hasRole('DOCTOR')">
+            <a class="nav-link" th:href="@{/doctor/agenda}">
+                <span class="me-2">•</span> [[#{plantilla.agenda}]]
+            </a>
+            <a class="nav-link" th:href="@{/doctor/pacientes}">
+                <span class="me-2">•</span> [[#{plantilla.pacientes}]]
+            </a>
+            <a class="nav-link" th:href="@{/doctor/bloquear}">
+                <span class="me-2">•</span> [[#{plantilla.bloquear}]]
+            </a>
+            <a class="nav-link" th:href="@{/doctor/perfil}">
+                <span class="me-2">•</span> [[#{plantilla.perfil}]]
+            </a>
+        </nav>
+        <div class="d-flex gap-2 px-3 pb-2 small">
+            <a class="text-white-50" href="#"
+               onclick="var qs=(location.search||'').replace(/^\?/,'').split('&').filter(function(p){return p&&p.slice(0,5)!=='lang=';});qs.push('lang=es');location.href=location.pathname+'?'+qs.join('&');return false;">ES</a>
+            <span class="text-white-50">|</span>
+            <a class="text-white-50" href="#"
+               onclick="var qs=(location.search||'').replace(/^\?/,'').split('&').filter(function(p){return p&&p.slice(0,5)!=='lang=';});qs.push('lang=en');location.href=location.pathname+'?'+qs.join('&');return false;">EN</a>
+        </div>
+        <div class="sidebar-user small d-flex align-items-center gap-2">
+            <span class="avatar-circle" th:if="${rol == 'ADMIN'}">A</span>
+            <span class="avatar-circle" th:if="${rol == 'DOCTOR'}">D</span>
+            <span class="avatar-circle" th:if="${rol == 'PACIENTE'}">P</span>
+            <div class="flex-grow-1">
+                <div class="text-white">[[${session.nombreUsuario}]]</div>
+                <div th:text="${rol}">Rol</div>
+            </div>
+            <button class="logout-link border-0" type="button" th:title="#{accion.cerrarSesion}"
+                    data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span class="visually-hidden">[[#{accion.cerrarSesion}]]</span>
+            </button>
+        </div>
+        <div class="modal fade" id="modalCerrarSesion" tabindex="-1"
+             aria-labelledby="modalCerrarSesionLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="modalCerrarSesionLabel">
+                            <i class="fa-solid fa-right-from-bracket"></i> [[#{plantilla.confirmarSesionTitulo}]]
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white"
+                                data-bs-dismiss="modal" th:aria-label="#{accion.cerrar}"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">[[#{plantilla.confirmarSesionTexto}]]</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            [[#{accion.cancelar}]]
+                        </button>
+                        <form th:action="@{/logout}" method="post" class="m-0">
+                            <button type="submit" class="btn btn-primary">[[#{accion.cerrarSesion}]]</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <section th:fragment="mostrarToast">
+        <div aria-live="polite" aria-atomic="true"
+             class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1080;">
+            <div th:if="${error}" class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header text-white bg-danger">
+                    <strong class="me-auto">[[#{error}]]</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">[[${error}]]</div>
+            </div>
+            <div th:if="${todoOk}" class="toast show" role="status" aria-live="polite" aria-atomic="true">
+                <div class="toast-header text-white bg-success">
+                    <strong class="me-auto">[[#{atencion}]]</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">[[${todoOk}]]</div>
+            </div>
+        </div>
+    </section>
+
+    <footer th:fragment="footer" class="py-3 text-center text-secondary">
+        <span>[[#{plantilla.derechos}]]</span>
+    </footer>
+
+</html>
