@@ -87,10 +87,10 @@ Usuarios de prueba (la contraseña de los cuatro está protegida con BCrypt):
 
 | Rol | Correo | Contraseña |
 | --- | --- | --- |
-| Administrador | `andrew@citamed.com` | `123` |
-| Paciente | `hillary@citamed.com` | `123` |
-| Doctor | `dilan@citamed.com` | `123` |
-| Doctor | `fernando@citamed.com` | `123` |
+| Administrador | `admin@citamed.com` | `123` |
+| Paciente | `paciente@citamed.com` | `123` |
+| Doctor | `doctor1@citamed.com` | `123` |
+| Doctor | `doctor2@citamed.com` | `123` |
 
 ## Seguridad
 

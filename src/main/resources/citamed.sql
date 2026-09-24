@@ -155,10 +155,10 @@ create table notificacion (
 -- Insercion de usuarios
 -- La contrasena de los cuatro usuarios de prueba es "123", protegida con BCrypt.
 insert into usuario (nombre, correo, contrasena, rol, activo) values
-('Jeferson Andrew Fuentes García', 'andrew@citamed.com', '$2a$10$XyIj4Q/A880L7gRzQkTrPeQH5iSBnXEhYz2fPrmj66lk6UbbfhuEO', 'ADMIN', true),
-('Hillary Sofía Aguilar Chavarría', 'hillary@citamed.com', '$2a$10$ns9ZzqUNDxgYOO/SHlN5eulVq5TbWfI8/voeZdS9sx3y5RUb7Zwfy', 'PACIENTE', true),
-('Dilan Steef Calvo Monge', 'dilan@citamed.com', '$2a$10$q3KOEvoZc.FEJmTgm.KbuuvCRRa1evDmerkpett6qZ.aslOrevSgq', 'DOCTOR', true),
-('Fernando Esteban Ramírez Pérez', 'fernando@citamed.com', '$2a$10$alzPVkvhI5IhnqJ95oaHVuYUG3L7XoXaF12gKFy4GAq4cy07zkySG', 'DOCTOR', true);
+('Administrador', 'admin@citamed.com', '$2a$10$XyIj4Q/A880L7gRzQkTrPeQH5iSBnXEhYz2fPrmj66lk6UbbfhuEO', 'ADMIN', true),
+('Paciente de Prueba', 'paciente@citamed.com', '$2a$10$ns9ZzqUNDxgYOO/SHlN5eulVq5TbWfI8/voeZdS9sx3y5RUb7Zwfy', 'PACIENTE', true),
+('Doctor de Prueba 1', 'doctor1@citamed.com', '$2a$10$q3KOEvoZc.FEJmTgm.KbuuvCRRa1evDmerkpett6qZ.aslOrevSgq', 'DOCTOR', true),
+('Doctor de Prueba 2', 'doctor2@citamed.com', '$2a$10$alzPVkvhI5IhnqJ95oaHVuYUG3L7XoXaF12gKFy4GAq4cy07zkySG', 'DOCTOR', true);
 
 -- Insercion de especialidades
 insert into especialidad (nombre, descripcion, activo) values
