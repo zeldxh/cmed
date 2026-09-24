@@ -14,7 +14,7 @@ La aplicación utiliza una estructura MVC con persistencia relacional, autentica
 | --- | --- |
 | Aguilar Chavarría Hillary Sofía | Hilla-Aguilar15 |
 | Calvo Monge Dilan Steef | dilanscm |
-| Fuentes García Jeferson Andrew | 0u2d |
+| Fuentes García Jeferson Andrew | zeldxh |
 | Ramírez Pérez Fernando Esteban | FernandoRPZoy1996 |
 
 ## Tecnologías
