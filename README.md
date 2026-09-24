@@ -160,3 +160,7 @@ La aplicación soporta español e inglés mediante `messages_es.properties` y `m
 - Avance 1: planteamiento, backlog, prototipo y modelo preliminar completados.
 - Avance 2: aplicación funcional, persistencia, navegación por roles y vistas Bootstrap implementadas.
 - Entrega final: Spring Security, historias de usuario al 100%, 8va tabla, Spring Mail e internacionalización funcional completados.
+
+## Licencia
+
+Licencia MIT, ver [LICENSE](LICENSE).
