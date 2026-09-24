@@ -8,14 +8,9 @@ CitaMed permite que los pacientes registren su cuenta, consulten disponibilidad 
 
 La aplicación utiliza una estructura MVC con persistencia relacional, autenticación y autorización con Spring Security, vistas dinámicas construidas con Thymeleaf y Bootstrap, e internacionalización funcional en español e inglés.
 
-## Integrantes
+## Autor
 
-| Nombre | GitHub |
-| --- | --- |
-| Aguilar Chavarría Hillary Sofía | Hilla-Aguilar15 |
-| Calvo Monge Dilan Steef | dilanscm |
-| Fuentes García Jeferson Andrew | zeldxh |
-| Ramírez Pérez Fernando Esteban | FernandoRPZoy1996 |
+Desarrollado por [zeldxh](https://github.com/zeldxh).
 
 ## Tecnologías
 
